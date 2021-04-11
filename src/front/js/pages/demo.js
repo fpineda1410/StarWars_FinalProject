@@ -3,41 +3,75 @@ import { Link } from "react-router-dom";
 
 import { Context } from "../store/appContext";
 
-import "../../styles/demo.scss";
+import { Login } from "ant-design-pro";
 
-export const Demo = () => {
+import { Form, Input, Button, Checkbox, Alert } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+
+import "antd/dist/antd.css";
+
+const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
+
+export const LogIn = () => {
 	const { store, actions } = useContext(Context);
+	const [notice, setNotice] = useState("");
+	const [type, setType] = useState("tab2");
+	const [autologin, setAutologin] = useState(true);
+
+	function NormalLogin() {
+		const onFinish = values => {
+			console.log("Received values of form: ", values);
+		};
+	}
 
 	return (
-		<div className="container">
-			<ul className="list-group">
-				{store.demo.map((item, index) => {
-					return (
-						<li
-							key={index}
-							className="list-group-item d-flex justify-content-between"
-							style={{ background: item.background }}>
-							<Link to={"/single/" + index}>
-								<span>Link to: {item.title}</span>
-							</Link>
-							{// Conditional render example
-							// Check to see if the background is orange, if so, display the message
-							item.background === "orange" ? (
-								<p style={{ color: item.initial }}>
-									Check store/flux.js scroll to the actions to see the code
-								</p>
-							) : null}
-							<button className="btn btn-success" onClick={() => actions.changeColor(index, "orange")}>
-								Change Color
-							</button>
-						</li>
-					);
-				})}
-			</ul>
-			<br />
-			<Link to="/">
-				<button className="btn btn-primary">Back home</button>
-			</Link>
-		</div>
+		<Form
+			name="normal_login"
+			className="login-form"
+			initialValues={{
+				remember: true
+			}}
+			onFinish={onFinish}>
+			<Form.Item
+				name="username"
+				rules={[
+					{
+						required: true,
+						message: "Please input your Username!"
+					}
+				]}>
+				<Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+			</Form.Item>
+			<Form.Item
+				name="password"
+				rules={[
+					{
+						required: true,
+						message: "Please input your Password!"
+					}
+				]}>
+				<Input
+					prefix={<LockOutlined className="site-form-item-icon" />}
+					type="password"
+					placeholder="Password"
+				/>
+			</Form.Item>
+			<Form.Item>
+				<Form.Item name="remember" valuePropName="checked" noStyle>
+					<Checkbox>Remember me</Checkbox>
+				</Form.Item>
+
+				<a className="login-form-forgot" href="">
+					Forgot password
+				</a>
+			</Form.Item>
+
+			<Form.Item>
+				<Button type="primary" htmlType="submit" className="login-form-button">
+					Log in
+				</Button>
+				Or <a href="">register now!</a>
+			</Form.Item>
+		</Form>
 	);
 };

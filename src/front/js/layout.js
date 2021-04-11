@@ -3,7 +3,9 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 
 import { Home } from "./pages/home";
-import { Demo } from "./pages/demo";
+//import { LogIn } from "./pages/demo";
+import { NormalLoginForm } from "./pages/login";
+import { RegistrationForm } from "./pages/register";
 import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
 
@@ -17,28 +19,25 @@ const Layout = () => {
 	const basename = process.env.BASENAME || "";
 
 	return (
-		<div className="d-flex flex-column h-100">
-			<BrowserRouter basename={basename}>
-				<ScrollToTop>
-					<Navbar />
-					<Switch>
-						<Route exact path="/">
-							<Home />
-						</Route>
-						<Route exact path="/demo">
-							<Demo />
-						</Route>
-						<Route exact path="/single/:theid">
-							<Single />
-						</Route>
-						<Route>
-							<h1>Not found!</h1>
-						</Route>
-					</Switch>
-					<Footer />
-				</ScrollToTop>
-			</BrowserRouter>
-		</div>
+		<BrowserRouter basename={basename}>
+			<ScrollToTop>
+				<Switch>
+					<Route exact path="/">
+						<Home />
+					</Route>
+
+					<Route exact path="/single/:theid">
+						<Single />
+					</Route>
+					<Route exact path="/login">
+						<NormalLoginForm />
+					</Route>
+					<Route exact path="/register">
+						<RegistrationForm />
+					</Route>
+				</Switch>
+			</ScrollToTop>
+		</BrowserRouter>
 	);
 };
 
