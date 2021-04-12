@@ -20,11 +20,11 @@ static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
-# database condiguration
-# if os.getenv("DATABASE_URL") is not None:
-#     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-# else:
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///test.db"
+#database condiguration
+if os.getenv("DATABASE_URL") is not None:
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///test.db"
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db)

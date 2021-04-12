@@ -85,6 +85,12 @@ def get_planets():
     planet = list(map(lambda x: x.serialize(), planet))
     return jsonify(planet), 200
 
+@api.route("/characters" , methods=["GET"])
+def get_characters():
+    character = Character.query.all()
+    character = list(map(lambda x: x.serialize(), character))
+    return jsonify(character), 200
+
 @api.route("/update-favorites" , methods=["POST"])
 @jwt_required()
 def update_favorites_sm():

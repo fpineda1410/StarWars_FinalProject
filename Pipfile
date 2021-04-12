@@ -21,11 +21,11 @@ flask-jwt-extended = "*"
 requests = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.8"
 
 [scripts]
 start="flask run -p 3001 -h 0.0.0.0"
-local_start="flask run -p 3001 --host=0.0.0.0"
+local_start="flask run -p 3001 --host=127.0.0.1"
 init="flask db init"
 migrate="flask db migrate"
 local="heroku local"

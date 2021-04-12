@@ -157,19 +157,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 				fetch("http://127.0.0.1:3001/api/login", requestOptions)
 					.then(response => response.json())
 					.then(data => console.log(data));
-			},
-			//todo implement fetchs
-			debugger: async () => {
-				const store = getStore();
-				console.log(store.bearer_token);
-				const requestOptions = {
-					method: "GET",
-					headers: { "Content-Type": "application/json", Authorization: store.bearer_token }
-				};
-				fetch("http://127.0.0.1:3001/api/user_identity", requestOptions)
-					.then(response => response.json())
-					.then(data => console.log(data));
 			}
+			// },
+			// //todo implement fetchs
+			// debugger: async () => {
+			// 	const store = getStore();
+			// 	console.log(store.bearer_token);
+			// 	const requestOptions = {
+			// 		method: "GET",
+			// 		headers: { "Content-Type": "application/json", Authorization: store.bearer_token }
+			// 	};
+			// 	fetch("http://127.0.0.1:3001/api/user_identity", requestOptions)
+			// 		.then(response => response.json())
+			// 		.then(data => console.log(data));
+			// }
 		}
 	};
 };
