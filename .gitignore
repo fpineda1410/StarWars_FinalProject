@@ -6,7 +6,7 @@
 !.github
 php_errorlog
 .log
-
+migrations/
 # do not ignore gitpod files
 !.gitpod.Dockerfile
 !.gitpod.yml
@@ -59,7 +59,7 @@ node_modules/
 # webpack output
 dist/*
 public/
-migrations/*
+
 
 
 # ignore the dist directory were our bundle files are going to be
