@@ -1,15 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Context } from "../store/appContext";
 
 import "antd/dist/antd.css";
 import "../../styles/login.css";
 import { Form, Input, Button, Checkbox, Row, Col, Typography, Image } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const { Title } = Typography;
 
 export const NormalLoginForm = () => {
+	const { store, actions } = useContext(Context);
+
 	const onFinish = values => {
 		console.log("Received values of form: ", values);
+		actions.login_user(values.username, values.password);
 	};
 
 	return (
@@ -47,21 +52,15 @@ export const NormalLoginForm = () => {
 							placeholder="Password"
 						/>
 					</Form.Item>
-					<Form.Item>
-						<Form.Item name="remember" valuePropName="checked" noStyle>
-							<Checkbox>Remember me</Checkbox>
-						</Form.Item>
-
-						<a className="login-form-forgot" href="">
-							Forgot password
-						</a>
-					</Form.Item>
 
 					<Form.Item>
 						<Button type="primary" htmlType="submit" className="login-form-button">
 							Log in
 						</Button>
-						Or <a href="">register now!</a>
+						Or{" "}
+						<Link key={"register"} to={"/register"}>
+							<a href="">register now!</a>
+						</Link>
 					</Form.Item>
 				</Form>
 			</Col>

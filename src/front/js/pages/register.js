@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Form, Input, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, Image, Typography } from "antd";
-
+import { Context } from "../store/appContext";
 const { Option } = Select;
 
 const { Title } = Typography;
@@ -38,9 +38,11 @@ const tailFormItemLayout = {
 
 export const RegistrationForm = () => {
 	const [form] = Form.useForm();
+	const { store, actions } = useContext(Context);
 
 	const onFinish = values => {
 		console.log("Received values of form: ", values);
+		actions.register_user(values.nickname, values.password, values.email);
 	};
 
 	const prefixSelector = (

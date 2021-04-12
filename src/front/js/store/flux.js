@@ -1,10 +1,18 @@
+let temporal_list;
+let temporal_list_planets = [];
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			protagonist_data: [],
+			index: 0,
+			character_data: [],
 			planet_data: [],
-
-			image_storage_protagonists: [
+			main_information: [],
+			characters: [],
+			planets: [],
+			bearer_token:
+				"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6Z…2NzN9.0lcyYTt-cHQFJdMAz7mbKHgJr4jbPTICniqiwZhKF2s",
+			image_storage_characters: [
 				"https://lrmonline.com/wp-content/uploads/2020/02/llyly.jpeg", //luke
 				"https://www.starwars-holonet.com/news/2017/2017-12-31-c3po-retour-2017.jpg", //C3Po
 				"https://cdnb.artstation.com/p/assets/images/images/000/679/053/large/anton-jurkov-r2d2-starwars.jpg?1430602701", //R2D2
@@ -12,7 +20,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				"https://townsquare.media/site/442/files/2017/08/Star-Wars-Princess-Leia.jpg?w=980&q=75", //Leia
 				"https://cdnb.artstation.com/p/assets/images/images/003/420/677/large/darren-pattenden-ilm-challenge-the-moment-1.jpg?1541176032", //Owen
 				"https://i.pinimg.com/originals/2b/bb/71/2bbb712405c574c6ce78730e00464a8e.jpg", //Beru White
-				"https://cdnb.artstation.com/p/assets/images/images/004/420/205/large/oleksandr-pazurenko-07.jpg?1483614048", //R5d4
+				"https://pbs.twimg.com/media/Eks5wMTXgAclnn5.jpg", //R5d4
 				"https://cdnb.artstation.com/p/assets/images/images/027/723/547/large/adam-lane-biggsdarklighter-adamlane.jpg?1592360596", //Biggs Darklig
 				"https://pbs.twimg.com/media/ELHMAugXkBAySWf.jpg" //Obiwan
 			],
@@ -33,26 +41,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// Use getActions to call a function within a fuction
 			pushData: element => {
 				const store = getStore();
-				let newProtagonists = [];
+				//console.log(element);
+				let newCharacters = [];
 				let id_tester = [];
-				store.protagonists.map((elm, i) => {
-					newProtagonists.push(elm);
+				store.characters.map((elm, i) => {
+					newCharacters.push(elm);
 				});
-				if (newProtagonists.length == 0) {
-					newProtagonists.push(element);
+				if (newCharacters.length == 0) {
+					newCharacters.push(element);
 				} else {
-					newProtagonists.map(elm => {
+					newCharacters.map(elm => {
 						id_tester.push(elm.id);
 					});
 					if (!id_tester.includes(element.id)) {
 						//todo the element I receive is a complete data set, divide element into element.name, element.local_id
 						//todo change to local id
-						newProtagonists.push(element); // todo elemen.name
+						newCharacters.push(element); // todo elemen.name
 					}
 				}
 
-				console.log(id_tester);
-				setStore({ protagonists: newProtagonists }); //edit this in order to be category: CHARACTER id: local_id
+				//console.log(id_tester);
+				setStore({ characters: newCharacters }); //edit this in order to be category: CHARACTER id: local_id
 			},
 
 			deleteData: id => {
@@ -61,14 +70,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const store = getStore();
 				let newProtagonists = [];
 
-				store.protagonists.map((elm, i) => {
+				store.characters.map((elm, i) => {
 					if (elm.id !== id) {
 						newProtagonists.push(elm);
 					}
 				});
-				console.log(id);
+				//console.log(id);
 
-				setStore({ protagonists: newProtagonists });
+				setStore({ characters: newProtagonists });
 			},
 			pushDataPlanets: element => {
 				const store = getStore();
@@ -88,7 +97,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						newPlanets.push(element);
 					}
 				}
-				console.log(id_tester);
+				//console.log(id_tester);
 				setStore({ planets: newPlanets });
 			},
 			deleteDataPlanets: id => {
@@ -99,40 +108,73 @@ const getState = ({ getStore, getActions, setStore }) => {
 						newPlanets.push(elm);
 					}
 				});
-				console.log(id);
+				//console.log(id);
 				setStore({ planets: newPlanets });
 			},
 
-			publishData: (info_array, index) => {
+			publishData: index => {
 				const store = getStore();
-				setStore({ main_information: info_array });
+				//console.log(index);
+				setStore({ main_information: store.character_data[index] });
 				setStore({ index: index });
 			},
 			getRequest_protagonists_props: async () => {
-				const urlAPI = "http://0.0.0.0:3001/planets";
+				const urlAPI = "http://127.0.0.1:3001/api/characters";
 				const result = await fetch(urlAPI)
 					.then(res => res.json())
-					.then(data => data);
-				temporal_list = result.results;
+					.then(data => (temporal_list = data));
+				//temporal_list = result.results;
 
 				console.log(temporal_list);
-				setStore({ protagonist_props: temporal_list });
+				setStore({ character_data: temporal_list });
 				//setStore({ boolean_protagonists: true });
 			},
 
 			getRequest_planets_props: async () => {
-				const urlAPI = "http://0.0.0.0:3001/";
+				const urlAPI = "http://127.0.0.1:3001/api/planets";
 				const result = await fetch(urlAPI)
 					.then(res => res.json())
-					.then(data => data);
-				temporal_list_planets = result.results;
-
-				setStore({ boolean_planets: true });
-
-				setStore({ planet_props: temporal_list_planets });
+					.then(data => (temporal_list_planets = data));
+				console.log(temporal_list_planets);
+				setStore({ planet_data: temporal_list_planets });
+			},
+			register_user: async (username, password, email) => {
+				const requestOptions = {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ username: username, password: password, email: email })
+				};
+				fetch("http://127.0.0.1:3001/api/create-account", requestOptions)
+					.then(response => response.json())
+					.then(data => console.log(data));
+			},
+			login_user: async (username, password) => {
+				const requestOptions = {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ username: username, password: password })
+				};
+				fetch("http://127.0.0.1:3001/api/login", requestOptions)
+					.then(response => response.json())
+					.then(data => console.log(data));
+			},
+			//todo implement fetchs
+			debugger: async () => {
+				const store = getStore();
+				console.log(store.bearer_token);
+				const requestOptions = {
+					method: "GET",
+					headers: { "Content-Type": "application/json", Authorization: store.bearer_token }
+				};
+				fetch("http://127.0.0.1:3001/api/user_identity", requestOptions)
+					.then(response => response.json())
+					.then(data => console.log(data));
 			}
 		}
 	};
 };
 
 export default getState;
+
+//todo implement fetch, login y update favorites con la condicion que ya este logeado
+//todo subir gitpod
