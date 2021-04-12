@@ -109,39 +109,47 @@ export const Home = () => {
 							<Link to={"/login"}>Login</Link>
 						</Menu.Item>
 						<SubMenu key="sub1" icon={<CheckCircleFilled />} title="Favorites">
-							{store.characters.map((item, index) => {
-								let unique_key = uuidv4();
-								return (
-									<Menu.Item key={unique_key}>
-										<DeleteFilled
-											key="delete"
-											onClick={() => {
-												actions.deleteData(item.id);
-											}}
-										/>
-										{item.title}
-									</Menu.Item>
-								);
-							})}
-							{store.planets.map((item, index) => {
-								let unique_key = uuidv4();
-								return (
-									<Menu.Item key={unique_key}>
-										<DeleteFilled
-											key="delete"
-											onClick={() => {
-												actions.deleteDataPlanets(item.id);
-											}}
-										/>
-										{item.title}
-									</Menu.Item>
-								);
-							})}
+							{store.login ? (
+								store.characters.map((item, index) => {
+									let unique_key = uuidv4();
+									return (
+										<Menu.Item key={unique_key}>
+											<DeleteFilled
+												key="delete"
+												onClick={() => {
+													actions.deleteData(item.id);
+												}}
+											/>
+											{item.title}
+										</Menu.Item>
+									);
+								})
+							) : (
+								<Menu.Item key="0"></Menu.Item>
+							)}
+							{store.login ? (
+								store.planets.map((item, index) => {
+									let unique_key = uuidv4();
+									return (
+										<Menu.Item key={unique_key}>
+											<DeleteFilled
+												key="delete"
+												onClick={() => {
+													actions.deleteData(item.id);
+												}}
+											/>
+											{item.title}
+										</Menu.Item>
+									);
+								})
+							) : (
+								<Menu.Item key="0"></Menu.Item>
+							)}
 						</SubMenu>
 						<Menu.Item
 							key="9"
 							onClick={() => {
-								actions.debugger();
+								actions.sign_out();
 							}}
 							icon={<CaretLeftOutlined />}
 							title="">

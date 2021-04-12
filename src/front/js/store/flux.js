@@ -5,6 +5,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			index: 0,
+			login: false,
 			character_data: [],
 			planet_data: [],
 			main_information: [],
@@ -119,7 +120,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ index: index });
 			},
 			getRequest_protagonists_props: async () => {
-				const urlAPI = "http://127.0.0.1:3001/api/characters";
+				const urlAPI = "https://3001-emerald-prawn-7mtsmjr9.ws-us03.gitpod.io/api/characters";
 				const result = await fetch(urlAPI)
 					.then(res => res.json())
 					.then(data => (temporal_list = data));
@@ -131,7 +132,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			getRequest_planets_props: async () => {
-				const urlAPI = "http://127.0.0.1:3001/api/planets";
+				const urlAPI = "https://3001-emerald-prawn-7mtsmjr9.ws-us03.gitpod.io/api/planets";
 				const result = await fetch(urlAPI)
 					.then(res => res.json())
 					.then(data => (temporal_list_planets = data));
@@ -144,33 +145,68 @@ const getState = ({ getStore, getActions, setStore }) => {
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({ username: username, password: password, email: email })
 				};
-				fetch("http://127.0.0.1:3001/api/create-account", requestOptions)
+				fetch("https://3001-emerald-prawn-7mtsmjr9.ws-us03.gitpod.io/api/create-account", requestOptions)
 					.then(response => response.json())
 					.then(data => console.log(data));
 			},
 			login_user: async (username, password) => {
+				const store = getStore();
 				const requestOptions = {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({ username: username, password: password })
 				};
-				fetch("http://127.0.0.1:3001/api/login", requestOptions)
+				fetch("https://3001-emerald-prawn-7mtsmjr9.ws-us03.gitpod.io/api/login", requestOptions)
+					.then(response => response.json())
+					.then(data => setStore({ bearer_token: data }));
+				console.log(store.bearer_token);
+				if (store.bearer_token.length > 0) {
+					setStore({ login: true });
+				}
+			},
+
+			sign_out: async () => {
+				const store = getStore();
+				console.log(store.characters);
+				console.log(store.planets);
+				let body_list = [];
+				if (store.planets.length > 0) {
+					store.planets.forEach(element => body_list.push({ category: "PLANET", planet_id: element.id }));
+				}
+				if (store.characters.length > 0) {
+					store.characters.forEach(element =>
+						body_list.push({ category: "CHARACTER", character_id: element.id })
+					);
+				}
+				console.log(body_list);
+				const requestOptions = {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + store.bearer_token.access_token
+					},
+					body: JSON.stringify(body_list)
+				};
+				fetch("https://3001-emerald-prawn-7mtsmjr9.ws-us03.gitpod.io/api/update-favorites", requestOptions)
+					.then(response => response.json())
+					.then(data => console.log(data));
+				setStore({ bearer_token: "" });
+			},
+			//todo implement fetchs
+			debugger: async () => {
+				const store = getStore();
+				console.log(store.bearer_token);
+				const requestOptions = {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + store.bearer_token.access_token
+					}
+				};
+				fetch("https://3001-emerald-prawn-7mtsmjr9.ws-us03.gitpod.io/api/user_identity", requestOptions)
 					.then(response => response.json())
 					.then(data => console.log(data));
 			}
-			// },
-			// //todo implement fetchs
-			// debugger: async () => {
-			// 	const store = getStore();
-			// 	console.log(store.bearer_token);
-			// 	const requestOptions = {
-			// 		method: "GET",
-			// 		headers: { "Content-Type": "application/json", Authorization: store.bearer_token }
-			// 	};
-			// 	fetch("http://127.0.0.1:3001/api/user_identity", requestOptions)
-			// 		.then(response => response.json())
-			// 		.then(data => console.log(data));
-			// }
 		}
 	};
 };
