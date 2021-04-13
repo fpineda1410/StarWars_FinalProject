@@ -1,5 +1,9 @@
+import React from "react";
+import { Redirect } from "react-router";
+
 let temporal_list;
 let temporal_list_planets = [];
+let global_url = "https://3001-crimson-rhinoceros-7f2a6oi5.ws-us03.gitpod.io/";
 
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
@@ -120,7 +124,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ index: index });
 			},
 			getRequest_protagonists_props: async () => {
-				const urlAPI = "https://3001-emerald-prawn-7mtsmjr9.ws-us03.gitpod.io/api/characters";
+				const urlAPI = global_url + "api/characters";
 				const result = await fetch(urlAPI)
 					.then(res => res.json())
 					.then(data => (temporal_list = data));
@@ -132,7 +136,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			getRequest_planets_props: async () => {
-				const urlAPI = "https://3001-emerald-prawn-7mtsmjr9.ws-us03.gitpod.io/api/planets";
+				const urlAPI = global_url + "api/planets";
 				const result = await fetch(urlAPI)
 					.then(res => res.json())
 					.then(data => (temporal_list_planets = data));
@@ -145,23 +149,51 @@ const getState = ({ getStore, getActions, setStore }) => {
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({ username: username, password: password, email: email })
 				};
-				fetch("https://3001-emerald-prawn-7mtsmjr9.ws-us03.gitpod.io/api/create-account", requestOptions)
+				fetch(global_url + "api/create-account", requestOptions)
 					.then(response => response.json())
 					.then(data => console.log(data));
 			},
 			login_user: async (username, password) => {
 				const store = getStore();
+				let temporal_list_fav_list = [];
 				const requestOptions = {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({ username: username, password: password })
 				};
-				fetch("https://3001-emerald-prawn-7mtsmjr9.ws-us03.gitpod.io/api/login", requestOptions)
+				await fetch(global_url + "api/login", requestOptions)
 					.then(response => response.json())
 					.then(data => setStore({ bearer_token: data }));
 				console.log(store.bearer_token);
 				if (store.bearer_token.length > 0) {
 					setStore({ login: true });
+				}
+				const requestOptions_favorites = {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + store.bearer_token.access_token
+					}
+				};
+				await fetch(global_url + "api/get-favorites", requestOptions_favorites)
+					.then(response => response.json())
+					.then(data => (temporal_list_fav_list = data));
+
+				if (temporal_list_fav_list.length > 0) {
+					temporal_list_fav_list.forEach(item => {
+						if (item.type == "CHARACTER") {
+							console.log(item);
+							let temporal_item = { id: item.id, title: item.name };
+							getActions().pushData(temporal_item);
+						}
+						if (item.type == "PLANET") {
+							console.log(item);
+							let temporal_item = { id: item.id, title: item.name };
+							getActions().pushDataPlanets(temporal_item);
+						}
+					});
+					console.log(store.characters);
+					console.log(store.planets);
 				}
 			},
 
@@ -187,10 +219,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					},
 					body: JSON.stringify(body_list)
 				};
-				fetch("https://3001-emerald-prawn-7mtsmjr9.ws-us03.gitpod.io/api/update-favorites", requestOptions)
+				fetch(global_url + "api/update-favorites", requestOptions)
 					.then(response => response.json())
 					.then(data => console.log(data));
 				setStore({ bearer_token: "" });
+				setStore({ characters: [] });
+				setStore({ planets: [] });
 			},
 			//todo implement fetchs
 			debugger: async () => {
@@ -203,7 +237,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						Authorization: "Bearer " + store.bearer_token.access_token
 					}
 				};
-				fetch("https://3001-emerald-prawn-7mtsmjr9.ws-us03.gitpod.io/api/user_identity", requestOptions)
+				fetch(global_url + "api/user_identity", requestOptions)
 					.then(response => response.json())
 					.then(data => console.log(data));
 			}

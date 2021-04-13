@@ -24,14 +24,16 @@ const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 const { Meta } = Card;
 const { Title } = Typography;
-
+let login = 0;
 import "../../styles/home.css";
 
 export const Home = () => {
 	const [collapse, setCollapse] = useState(false);
 	const { store, actions } = useContext(Context);
 
-	useEffect(() => {}, [collapse, store.main_information]);
+	useEffect(() => {
+		login = sessionStorage.getItem("login");
+	}, [collapse, store.bearer_token]);
 
 	function onCollapse() {
 		setCollapse(!collapse);
@@ -109,8 +111,9 @@ export const Home = () => {
 							<Link to={"/login"}>Login</Link>
 						</Menu.Item>
 						<SubMenu key="sub1" icon={<CheckCircleFilled />} title="Favorites">
-							{store.login ? (
+							{store.characters.length > 0 ? (
 								store.characters.map((item, index) => {
+									console.log(item);
 									let unique_key = uuidv4();
 									return (
 										<Menu.Item key={unique_key}>
@@ -127,15 +130,16 @@ export const Home = () => {
 							) : (
 								<Menu.Item key="0"></Menu.Item>
 							)}
-							{store.login ? (
+							{store.planets.length > 0 ? (
 								store.planets.map((item, index) => {
+									console.log(item);
 									let unique_key = uuidv4();
 									return (
 										<Menu.Item key={unique_key}>
 											<DeleteFilled
 												key="delete"
 												onClick={() => {
-													actions.deleteData(item.id);
+													actions.deleteDataPlanets(item.id);
 												}}
 											/>
 											{item.title}
@@ -143,9 +147,12 @@ export const Home = () => {
 									);
 								})
 							) : (
-								<Menu.Item key="0"></Menu.Item>
+								<Menu.Item key="1"></Menu.Item>
 							)}
 						</SubMenu>
+						<Menu.Item key="5" onClick={() => console.log(store.characters)}>
+							check
+						</Menu.Item>
 						<Menu.Item
 							key="9"
 							onClick={() => {

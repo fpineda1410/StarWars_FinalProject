@@ -94,7 +94,8 @@ class FavoritePlanet (db.Model): # favorite_planet
         planet_data=Planet.query.filter_by(id=self.planet_id).first()
         return {
             "id": self.planet_id,
-            "name": planet_data.name
+            "name": planet_data.name,
+            "type": "PLANET"
         }
 
 class FavoriteCharacter (db.Model): ## favorite_character
@@ -106,5 +107,6 @@ class FavoriteCharacter (db.Model): ## favorite_character
         character_data=Character.query.filter_by(id=self.character_id).first()
         return {
             "id": self.character_id,
-            "name": character_data.name
+            "name": character_data.name,
+            "type": "CHARACTER"
         }
